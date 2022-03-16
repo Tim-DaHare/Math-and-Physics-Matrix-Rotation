@@ -7,19 +7,45 @@ public class RotatableCube : MonoBehaviour
     [SerializeField] [Range(0, 360)] private float _yRot;
     [SerializeField] [Range(0, 360)] private float _zRot;
     
-    [SerializeField] [Range(0, 360)] private float _xTrans;
-    [SerializeField] [Range(0, 360)] private float _yTrans;
-    [SerializeField] [Range(0, 360)] private float _zTrans;
+    [SerializeField] [Range(-5, 5)] private float _xTrans = 0;
+    [SerializeField] [Range(-5, 5)] private float _yTrans = 0;
+    [SerializeField] [Range(-5, 5)] private float _zTrans = 0;
 
     [SerializeField] private Slider _xRotSlider;
     [SerializeField] private Slider _yRotSlider;
     [SerializeField] private Slider _zRotSlider;
+    
+    [SerializeField] private Slider _xTransSlider;
+    [SerializeField] private Slider _yTransSlider;
+    [SerializeField] private Slider _zTransSlider;
+
+    public void ResetTranslationAxis(int axis)
+    {
+        switch (axis)
+        {
+            case 0:
+                _xTransSlider.value = 0;
+                break;
+            case 1:
+                _yTransSlider.value = 0;
+                break;
+            case 2:
+                _zTransSlider.value = 0;
+                break;
+        }
+        
+        print("Saaf");
+    }
 
     private void Update()
     {
-        // _x = _xRotSlider.value;
-        // _y = _yRotSlider.value;
-        // _z = _zRotSlider.value;
+        _xRot = _xRotSlider.value;
+        _yRot = _yRotSlider.value;
+        _zRot = _zRotSlider.value;
+
+        _xTrans = _xTransSlider.value;
+        _yTrans = _yTransSlider.value;
+        _zTrans = _zTransSlider.value;
         
         HandleRotation();
     }
@@ -30,12 +56,11 @@ public class RotatableCube : MonoBehaviour
         var yRad = _yRot * Mathf.Deg2Rad;
         var zRad = _zRot * Mathf.Deg2Rad;
 
-        // TODO: Put translations value in last column of this matrix
         var transMatrix = new Matrix4x4(
             new Vector4(1, 0, 0, 0),
             new Vector4(0, 1, 0, 0),
             new Vector4(0, 0, 1, 0),
-            new Vector4(0, 0, 0, 1)
+            new Vector4(_xTrans, _yTrans, _zTrans, 1)
         );
         
         var xRot = new Matrix4x4(
@@ -60,9 +85,9 @@ public class RotatableCube : MonoBehaviour
         );
 
         var rotMatrix = MatrixExtensions.MultiplyMatrices(MatrixExtensions.MultiplyMatrices(xRot, yRot), zRot);
-        
-        // TODO: multiply trans matrix with rot matrix and apply the result to the transform
 
-        transform.FromMatrix(rotMatrix);
+        var t = MatrixExtensions.MultiplyMatrices(transMatrix, rotMatrix);
+        
+        transform.FromMatrix(t);
     }
 }
