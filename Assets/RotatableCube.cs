@@ -3,9 +3,13 @@ using UnityEngine.UI;
 
 public class RotatableCube : MonoBehaviour
 {
-    [SerializeField] [Range(0, 360)] private float _x;
-    [SerializeField] [Range(0, 360)] private float _y;
-    [SerializeField] [Range(0, 360)] private float _z;
+    [SerializeField] [Range(0, 360)] private float _xRot;
+    [SerializeField] [Range(0, 360)] private float _yRot;
+    [SerializeField] [Range(0, 360)] private float _zRot;
+    
+    [SerializeField] [Range(0, 360)] private float _xTrans;
+    [SerializeField] [Range(0, 360)] private float _yTrans;
+    [SerializeField] [Range(0, 360)] private float _zTrans;
 
     [SerializeField] private Slider _xRotSlider;
     [SerializeField] private Slider _yRotSlider;
@@ -13,18 +17,26 @@ public class RotatableCube : MonoBehaviour
 
     private void Update()
     {
-        _x = _xRotSlider.value;
-        _y = _yRotSlider.value;
-        _z = _zRotSlider.value;
+        // _x = _xRotSlider.value;
+        // _y = _yRotSlider.value;
+        // _z = _zRotSlider.value;
         
-        MyHandleRotation();
+        HandleRotation();
     }
 
-    private void MyHandleRotation()
+    private void HandleRotation()
     {
-        var xRad = _x * Mathf.Deg2Rad;
-        var yRad = _y * Mathf.Deg2Rad;
-        var zRad = _z * Mathf.Deg2Rad;
+        var xRad = _xRot * Mathf.Deg2Rad;
+        var yRad = _yRot * Mathf.Deg2Rad;
+        var zRad = _zRot * Mathf.Deg2Rad;
+
+        // TODO: Put translations value in last column of this matrix
+        var transMatrix = new Matrix4x4(
+            new Vector4(1, 0, 0, 0),
+            new Vector4(0, 1, 0, 0),
+            new Vector4(0, 0, 1, 0),
+            new Vector4(0, 0, 0, 1)
+        );
         
         var xRot = new Matrix4x4(
             new Vector4(1, 0, 0, 0),
@@ -48,9 +60,9 @@ public class RotatableCube : MonoBehaviour
         );
 
         var rotMatrix = MatrixExtensions.MultiplyMatrices(MatrixExtensions.MultiplyMatrices(xRot, yRot), zRot);
+        
+        // TODO: multiply trans matrix with rot matrix and apply the result to the transform
 
         transform.FromMatrix(rotMatrix);
     }
-
-    
 }
