@@ -34,4 +34,24 @@ public static class MatrixExtensions
         scale.z = new Vector4(matrix.m02, matrix.m12, matrix.m22, matrix.m32).magnitude;
         return scale;
     }
+
+    // My own function for multiplying matrices
+    public static Matrix4x4 MultiplyMatrices(Matrix4x4 ma, Matrix4x4 mb)
+    {
+        var mc = new Matrix4x4();
+
+        for (var i = 0; i < 4; i++)
+        {
+            for (var j = 0; j < 4; j++) 
+            {
+                mc[i, j] = 0;
+                for (var k = 0; k < 4; k++)
+                {
+                    mc[i, j] += ma[i, k] * mb[k, j];
+                }
+            }
+        }
+
+        return mc;
+    }
 }
