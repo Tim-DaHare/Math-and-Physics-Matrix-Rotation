@@ -19,24 +19,6 @@ public class RotatableCube : MonoBehaviour
     [SerializeField] private Slider _yTransSlider;
     [SerializeField] private Slider _zTransSlider;
 
-    public void ResetTranslationAxis(int axis)
-    {
-        switch (axis)
-        {
-            case 0:
-                _xTransSlider.value = 0;
-                break;
-            case 1:
-                _yTransSlider.value = 0;
-                break;
-            case 2:
-                _zTransSlider.value = 0;
-                break;
-        }
-        
-        print("Saaf");
-    }
-
     private void Update()
     {
         _xRot = _xRotSlider.value;
